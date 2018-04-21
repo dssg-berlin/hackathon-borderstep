@@ -1,6 +1,6 @@
 import pandas as pd
 
-BASE_DATA_PATH = '/Users/jpapaioannou/Documents/Repos/private/dssg2018/data/'
+BASE_DATA_PATH = 'data/processed/DSSG/'
 
 def get_data(file_path):
 
@@ -11,10 +11,6 @@ def get_data(file_path):
         data = pd.read_pickle(BASE_DATA_PATH + file_path)
 
     return data
-
-
-
-
 
 
 if __name__ == '__main__':
