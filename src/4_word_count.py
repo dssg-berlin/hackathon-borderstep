@@ -48,6 +48,8 @@ def count_keywords(keyword):
     Keyword Arguments:
     keyword --
     """
+    if len(keyword) == 0:
+        return []
 
     r = re.compile('|'.join('r\b%s\b' % w for w in keyword), re.I)
     rec = []
@@ -60,3 +62,10 @@ def count_keywords(keyword):
             if len(counts) > 0:
                 rec.append(entry)
     return rec
+
+
+for domain, egss in d.items():
+    for label, keyword in egss.items():
+        entries = count_keywords(keyword)
+        if len(entries) > 0:
+            print(domain, label, entries)
