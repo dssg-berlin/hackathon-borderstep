@@ -21,7 +21,7 @@ def extract_keywords(ds):
     content = re.sub('[\(\)]', ',', content)
     content = content.split(',')
     content = [a.strip() for a in content if a.strip() != '']
-    content = [re.sub('\*', '.*', x) for x in content]
+    content = [re.sub('\*', '\w*', x) for x in content]
     return content
 
 
