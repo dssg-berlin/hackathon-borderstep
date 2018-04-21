@@ -87,6 +87,30 @@ def count_keywords(keyword, text):
     return counts
 
 
+def find_keywords(keywords, webs):
+    """
+    Keyword Arguments:
+    webs --
+    """
+    rec = []
+    for entry, row in webs.iterrows():
+        if isinstance(row['text'], float):
+            continue
+
+        description = " ".join(row['text'])
+
+        if keywords.get('avoid_keywords', None):
+            unwanted = count_keywords(keywords.get(
+                'avoid_keywords', None), description)
+            if unwanted:
+                continue
+
+        counts = count_keywords(keywords['desired_keywords'], description)
+
+        if len(counts) > 0:
+            rec.append((entry, counts))
+    return rec
+
 
 # Extract keywords
 data_dir = '../data/processed/DSSG'
@@ -98,33 +122,18 @@ dfk.columns = ['domain', 'egss', 'field', 'keywords', 'extra', 'notes']
 dfk = dfk.drop(['field', 'notes'], axis=1)
 
 dfk = dfk.fillna('')
-
-webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')[:50]
 classes = define_classes(dfk)
 
+webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')[:50]
+
 ds_list = []
-for entry, row in webs.iterrows():
-    if isinstance(row['text'], float):
-        continue
-
-    description = " ".join(row['text'])
-    for domain, egss in classes.items():
-        for column, keywords in egss.items():
-
-            if keywords.get('avoid_keywords', None):
-                unwanted = count_keywords(keywords.get(
-                    'avoid_keywords', None), description)
-                if unwanted:
-                    continue
-
-        entries = count_keywords(keyword)
+for domain, egss in classes.items():
+    for column, keywords in egss.items():
+        entries = find_keywords(keywords, webs)
         ds = pd.Series({k: v for k, v in entries})
         ds.name = column
         ds_list.append(ds)
 
-    counts = Counter(re.findall(r, description))
-    if len(counts) > 0:
-        rec.append((entry, counts))
 
 df = pd.concat(ds_list, axis=1)
 df = df.reindex(np.arange(len(webs)))
