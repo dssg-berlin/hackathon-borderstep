@@ -5,7 +5,6 @@ import html
 BASE_DATA_PATH = 'data/input/'
 BASE_DATA_PATH_RESULTS = 'data/processed/DSSG/'
 
-
 def get_data(file_path):
 
     if 'xlsx' in file_path:
