@@ -73,5 +73,12 @@ for domain, egss in d.items():
         ds_list.append(ds)
 
 df = pd.concat(ds_list, axis=1)
-df = df.fillna(Counter())
-df2 = df.applymap(len)
+df = df.reindex(np.arange(len(webs)))
+df = df.fillna('')
+df_count = df.applymap(len)
+df_words = df.applymap(lambda d: list(d.keys()) if isinstance(d, dict) else 0)
+
+dir_out = '../data/processed'
+pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2016_map.pkl'))
+pd.to_pickle(df_count, os.path.join(dir_out, 'word_counts_2016_counts.pkl'))
+pd.to_pickle(df_words, os.path.join(dir_out, 'word_counts_2016_words.pkl'))
