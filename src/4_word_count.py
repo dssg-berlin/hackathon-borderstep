@@ -51,7 +51,7 @@ def count_keywords(keyword):
     if len(keyword) == 0:
         return []
 
-    r = re.compile('|'.join('r\b%s\b' % w for w in keyword), re.I)
+    r = re.compile('|'.join(r'\b%s\b' % w for w in keyword), re.I)
     rec = []
     for entry, row in webs.iterrows():
         if isinstance(row['text'], float):
