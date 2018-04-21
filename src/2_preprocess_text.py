@@ -86,9 +86,9 @@ def naive_lang_evaluate(text: list, package='de_core_news_sm') -> float:
     return matched / len(tokens)
 
 
-data_dir = '../data/processed/'
-input_file = 'word_count_2015_2016.pkl'
-output_file = 'lemma_2015_2016.pkl'
+data_dir = 'data/processed/'
+input_file = 'word_count_full.pkl'
+output_file = 'lemma_full.pkl'
 
 nlp = spacy.load('de_core_news_sm')
 df_text = pd.read_pickle(data_dir + input_file)
