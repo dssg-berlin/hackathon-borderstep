@@ -1,4 +1,4 @@
-h2o==3.16.0.1
+h2o==3.18.0.3
 pandas==0.22
 sklearn
 spacy==2.0.11
