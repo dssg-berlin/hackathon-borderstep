@@ -76,7 +76,7 @@ hf = h2o.H2OFrame(df)
 hf[TARGET_VARIABLE] = hf[TARGET_VARIABLE].asfactor()
 
 # PARTITION DATA
-train, test = hf.split_frame(ratios=[.8])
+train, test = hf.split_frame(ratios=[.8])  # pylint: disable=unbalanced-tuple-unpacking
 
 # RUN AUTOML
 aml = H2OAutoML(max_runtime_secs=30,
