@@ -6,7 +6,7 @@ import spacy
 
 
 def lemmatize_stopwords(doc):
-    return [token.lemma_ for token in doc if not token.is_stop and not token.is_punct]
+    return [token.lemma_ for token in doc if token.is_alpha and not token.is_stop]
 
 
 def preprocess_text(text):
@@ -91,5 +91,5 @@ output_file = 'GEMO_2016_prep.pkl.gz'
 nlp = spacy.load('de_core_news_sm')
 df_text = pd.read_pickle(data_dir + input_file)
 df_text['lemma_words'] = df_text.text.apply(preprocess_text)
-df_text['de'] = df_text.lemma_words.apply(naive_lang_detect)
-df_text.to_pickle(output_file)
+df_text['lang'] = df_text.lemma_words.apply(naive_lang_detect)
+df_text.to_pickle(data_dir + output_file)
