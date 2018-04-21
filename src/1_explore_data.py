@@ -53,7 +53,7 @@ def read_files_from_data_folder(filenames):
                                                                      )
         end = filename.find('.pkl.gz')
         filename = filename[:end]
-        filepath = BASE_DATA_PATH+filename+'_with_titles.pkl.gz'
+        filepath = BASE_DATA_PATH_RESULTS+filename+'_with_titles.pkl.gz'
         domain_info.to_pickle(filepath, compression='infer', protocol=4)
 
 
