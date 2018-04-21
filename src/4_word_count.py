@@ -57,10 +57,10 @@ def count_keywords(keyword):
         if isinstance(row['text'], float):
             continue
 
-        for par in row['text']:
-            counts = Counter(re.findall(r, par))
-            if len(counts) > 0:
-                rec.append(entry)
+        description = " ".join(row['text'])
+        counts = Counter(re.findall(r, description))
+        if len(counts) > 0:
+            rec.append((entry, counts))
     return rec
 
 
