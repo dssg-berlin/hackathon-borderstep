@@ -40,7 +40,7 @@ for k, ds in dfk.iterrows():
         else:
             d[domain][egss] += extract_keywords(ds)
 
-webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')[:50]
+webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
 
 
 def count_keywords(keyword):
