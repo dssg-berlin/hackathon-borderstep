@@ -36,6 +36,20 @@ def extract_keywords(ds):
     return keyword_filter(content)
 
 
+def join_keywords(old, new):
+    if old['desired_keywords'] and new['desired_keywords']:
+        old['desired_keywords'] += new['desired_keywords']
+
+    if old.get('avoid_keywords', None):
+        if new.get('avoid_keywords', None):
+            old['avoid_keywords'] += new['avoid_keywords']
+
+    elif new.get('avoid_keywords', None):
+        old['avoid_keywords'] = new['avoid_keywords']
+
+    return old
+
+
 def define_classes(dfk):
     """From the dataframed excel file of categories return a dictionary
     Keyword Arguments:
@@ -55,7 +69,8 @@ def define_classes(dfk):
                 egss = ds.egss
                 d[domain][egss] = extract_keywords(ds)
             else:
-                d[domain][egss] += extract_keywords(ds)
+                d[domain][egss] = join_keywords(d[domain][egss],
+                                                extract_keywords(ds))
     return d
 
 
