@@ -114,7 +114,7 @@ def find_keywords(keywords, webs):
 
 if __name__ == '__main__':
     # Extract keywords
-    data_dir = '../data/processed/DSSG'
+    data_dir = 'data/processed/DSSG'
     keyword_filename = os.path.join(
         data_dir, 'GEMO-Schlagwortkatalog_20180312.xlsx')
     dfk = pd.read_excel(keyword_filename, skiprows=1)
