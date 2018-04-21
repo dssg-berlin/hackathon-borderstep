@@ -65,7 +65,9 @@ hf[TARGET_VARIABLE] = hf[TARGET_VARIABLE].asfactor()
 train, test = hf.split_frame(ratios=[.8])
 
 # RUN AUTOML
-aml = H2OAutoML(max_runtime_secs=30)
+aml = H2OAutoML(max_runtime_secs=30,
+                project_name='predict_green',
+                exclude_algos=['StackedEnsemble', 'DeepLearning'])
 aml.train(y=TARGET_VARIABLE,
           training_frame=train,
           validation_frame=test)
@@ -73,6 +75,7 @@ aml.train(y=TARGET_VARIABLE,
 # show leaderboard
 print('Leaderboard of AutoML (best model candidates):')
 print(aml.leaderboard)
+print(aml.leader)
 
 # MEASURE BEST MODEL
 y_true = test.as_data_frame().code_green
