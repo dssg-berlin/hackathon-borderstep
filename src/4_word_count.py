@@ -86,7 +86,7 @@ df_value_sum.columns = ['{}_value_sum'.format(c) for c in df_value_sum.columns]
 df_out = pd.concat([webs, df, df_value_sum], axis=1)
 
 dir_out = 'data/processed'
-pd.to_pickle(df, os.path.join(dir_out, 'word_count_2015_2016.pkl'))
+pd.to_pickle(df_out, os.path.join(dir_out, 'word_count_2015_2016.pkl'))
 
 # pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2015_2016_dicts.pkl'))
 # pd.to_pickle(df_value_sum, os.path.join(
