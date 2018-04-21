@@ -74,7 +74,7 @@ def define_classes(dfk):
     return d
 
 
-def count_keywords(keyword):
+def count_keywords(keyword, text):
     """Count occuring keywords in text
     Keyword Arguments:
     keyword --
@@ -83,12 +83,17 @@ def count_keywords(keyword):
         return []
 
     r = re.compile('|'.join(r'\b%s\b' % w for w in keyword), re.I)
-    rec = []
+    counts = Counter(re.findall(r, text))
+    return counts
+
+
+def parse_datas(webs):
     for entry, row in webs.iterrows():
         if isinstance(row['text'], float):
             continue
 
         description = " ".join(row['text'])
+
         counts = Counter(re.findall(r, description))
         if len(counts) > 0:
             rec.append((entry, counts))
