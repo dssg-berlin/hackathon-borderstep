@@ -6,4 +6,4 @@
 
 2. Add raw input data to ```data/input```
 
-3. Run python scripts in src/ in numerical order is prefix.
+3. Run python scripts in src/ in numerical order of prefix.
