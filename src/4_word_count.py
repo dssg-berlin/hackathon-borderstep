@@ -40,7 +40,7 @@ for k, ds in dfk.iterrows():
         else:
             d[domain][egss] += extract_keywords(ds)
 
-webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
+webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')[:50]
 
 
 def count_keywords(keyword):
@@ -64,8 +64,14 @@ def count_keywords(keyword):
     return rec
 
 
+ds_list = []
 for domain, egss in d.items():
-    for label, keyword in egss.items():
+    for column, keyword in egss.items():
         entries = count_keywords(keyword)
-        if len(entries) > 0:
-            print(domain, label, entries)
+        ds = pd.Series({k: v for k, v in entries})
+        ds.name = column
+        ds_list.append(ds)
+
+df = pd.concat(ds_list, axis=1)
+df = df.fillna(Counter())
+df2 = df.applymap(len)
