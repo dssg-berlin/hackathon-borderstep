@@ -1,4 +1,5 @@
 This is the folder for raw input data.
-Please add files here manually and do not push.
+Please add files here manually.
 
-SCRIPT SHALL NOT CHANGE THE FILES HERE
+DO NOT PUSH FILES HERE
+SCRIPTS SHALL NOT CHANGE THE FILES HERE
