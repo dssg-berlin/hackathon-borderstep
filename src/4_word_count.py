@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 import re
 
@@ -37,3 +38,15 @@ for k, ds in dfk.iterrows():
             d[domain][egss] = extract_keywords(ds)
         else:
             d[domain][egss] += extract_keywords(ds)
+
+webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
+
+from collections import Counter
+r = re.compile('|'.join('r\b%s\b' % w for w in extract_keywords(ds)), re.I)
+rec = []
+for i, row in webs.iterrows():
+    if isinstance(row['text'], float):
+        continue
+
+    for par in row['text']:
+        rec.append(Counter(re.findall(r, par)))
