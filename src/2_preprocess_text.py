@@ -11,8 +11,10 @@ def lemmatize_stopwords(doc):
 
 def preprocess_text(text):
     if isinstance(text, list) and len(text) > 0:
-        joined_text = ''.join(np.stack(text)[0])
+        joined_text = ''.join(text)
         return lemmatize_stopwords(nlp(joined_text))
+    elif isinstance(text,str):
+        return lemmatize_stopwords(nlp(text))
     else:
         return None
 
@@ -84,12 +86,13 @@ def naive_lang_evaluate(text: list, package='de_core_news_sm') -> float:
     return matched / len(tokens)
 
 
-data_dir = '../data/processed/DSSG/'
-input_file = 'GEMO_2016.pkl.gz'
-output_file = 'GEMO_2016_prep.pkl.gz'
+data_dir = '../data/processed/'
+input_file = 'word_count_2015_2016.pkl'
+output_file = 'lemma_2015_2016.pkl'
 
 nlp = spacy.load('de_core_news_sm')
 df_text = pd.read_pickle(data_dir + input_file)
-df_text['lemma_words'] = df_text.text.apply(preprocess_text)
-df_text['lang'] = df_text.lemma_words.apply(naive_lang_detect)
+#df_text['title_lemma'] = df_text.title.apply(preprocess_text)
+df_text['text_lemma'] = df_text.text.apply(preprocess_text)
+#df_text['lang'] = df_text.lemma_words.apply(naive_lang_detect)
 df_text.to_pickle(data_dir + output_file)
