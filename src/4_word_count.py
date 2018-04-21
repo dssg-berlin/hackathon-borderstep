@@ -5,7 +5,7 @@ import re
 from collections import Counter
 
 # Extract keywords
-data_dir = '../data/processed/DSSG'
+data_dir = 'data/processed/DSSG'
 keyword_filename = os.path.join(
     data_dir, 'GEMO-Schlagwortkatalog_20180312.xlsx')
 dfk = pd.read_excel(keyword_filename, skiprows=1)
@@ -40,7 +40,7 @@ for k, ds in dfk.iterrows():
         else:
             d[domain][egss] += extract_keywords(ds)
 
-webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
+webs = pd.read_pickle('data/processed/DSSG/GEMO_2016.pkl.gz')
 
 
 def count_keywords(keyword):
@@ -78,7 +78,7 @@ df = df.fillna('')
 df_count = df.applymap(len)
 df_words = df.applymap(lambda d: list(d.keys()) if isinstance(d, dict) else 0)
 
-dir_out = '../data/processed'
+dir_out = 'data/processed'
 pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2016_map.pkl'))
 pd.to_pickle(df_count, os.path.join(dir_out, 'word_counts_2016_counts.pkl'))
 pd.to_pickle(df_words, os.path.join(dir_out, 'word_counts_2016_words.pkl'))
