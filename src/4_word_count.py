@@ -40,8 +40,9 @@ for k, ds in dfk.iterrows():
         else:
             d[domain][egss] += extract_keywords(ds)
 
-webs = pd.read_pickle('data/processed/DSSG/GEMO_2016.pkl.gz')
-
+# webs = pd.read_pickle('data/processed/DSSG/GEMO_2016.pkl.gz')
+webs = pd.read_pickle('data/processed/merge_2015_2016.pkl')
+webs = webs.reset_index(drop=True)
 
 def count_keywords(keyword):
     """Count occuring keywords in text
@@ -75,10 +76,21 @@ for domain, egss in d.items():
 df = pd.concat(ds_list, axis=1)
 df = df.reindex(np.arange(len(webs)))
 df = df.fillna('')
-df_count = df.applymap(len)
-df_words = df.applymap(lambda d: list(d.keys()) if isinstance(d, dict) else 0)
+df_value_sum = df.applymap(lambda d: sum(d.values()) if isinstance(d, dict) else 0)
+# df_count = df.applymap(len)
+# df_words = df.applymap(lambda d: list(d.keys()) if isinstance(d, dict) else 0)
+
+df.columns = ['{}_dict'.format(c) for c in df.columns]
+df_value_sum.columns = ['{}_value_sum'.format(c) for c in df_value_sum.columns]
+
+df_out = pd.concat([webs, df, df_value_sum], axis=1)
 
 dir_out = 'data/processed'
-pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2016_map.pkl'))
-pd.to_pickle(df_count, os.path.join(dir_out, 'word_counts_2016_counts.pkl'))
-pd.to_pickle(df_words, os.path.join(dir_out, 'word_counts_2016_words.pkl'))
+pd.to_pickle(df, os.path.join(dir_out, 'word_count_2015_2016.pkl'))
+
+# pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2015_2016_dicts.pkl'))
+# pd.to_pickle(df_value_sum, os.path.join(
+#     dir_out, 'word_counts_2015_2016_value_sum.pkl'))
+
+# pd.to_pickle(df_count, os.path.join(dir_out, 'word_counts_2015_2016_counts.pkl'))
+# pd.to_pickle(df_words, os.path.join(dir_out, 'word_counts_2015_2016_words.pkl'))
