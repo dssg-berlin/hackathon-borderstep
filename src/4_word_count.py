@@ -12,12 +12,12 @@ def keyword_filter(entry):
     """
     negatives_p = entry.split('NICHT')
 
-    keywords = {"desired_keywords": split_cons(negatives_p[0])}
+    keyword = {"desired_keywords": split_cons(negatives_p[0])}
     if len(negatives_p) == 2:
         n_content = split_cons(negatives_p[1])
-        keywords["avoid_keywords"] = n_content
+        keyword["avoid_keywords"] = n_content
 
-    return keywords
+    return keyword
 
 
 def split_cons(content):
@@ -27,7 +27,7 @@ def split_cons(content):
     """
     content = content.split(',')
     content = [a.strip() for a in content if a.strip() != '']
-    return [re.sub('\*', '\w*', x) for x in content]
+    return [re.sub(r'\*', r'\w*', x) for x in content]
 
 
 def extract_keywords(ds):
