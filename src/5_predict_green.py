@@ -14,11 +14,13 @@ TARGET_VARIABLE = 'code_green'
 
 # READ DATA
 new_names = ["noname", "name_company", "PLZ", "town", "Bundesland", "url",
-             "wz_2008_main_activity_code", "wz_2008_main_activity_code_description", "description",
+             "wz_2008_main_activity_code",
+             "wz_2008_main_activity_code_description", "description",
              "code_green", "hints", "hints_business_model", "product_cat",
              "CreMA_13A", "CReMA_13B", "CReMA_11A", "CReMA_12", "CReMA_12_add",
-             "CReMA_10", "CReMA_11B", "CReMA_13C", "CReMA_14", "CReMA_15", "CReMA_16",
-             "CEPA_2", "CEPA_3", "CEPA_3_add", "CEPA_1", "CEPA_4", "CEPA_5", "CEPA_7", "CEPA_8", "CEPA_6", "CEPA_9",
+             "CReMA_10", "CReMA_11B", "CReMA_13C", "CReMA_14", "CReMA_15",
+             "CReMA_16", "CEPA_2", "CEPA_3", "CEPA_3_add", "CEPA_1", "CEPA_4",
+             "CEPA_5", "CEPA_7", "CEPA_8", "CEPA_6", "CEPA_9",
              "sustainabile_agriculture", 'sustainable_mobility',
              'green_IT', 'green_finance', 'green_services', 'date_founded',
              'legal_form_today', 'legal_form_today_since', 'crefo_no',
@@ -44,8 +46,10 @@ new_names = ["noname", "name_company", "PLZ", "town", "Bundesland", "url",
              'no_emploies_last_availabe_2',
              'no_emploies_lag_one',
              'no_emploies_lag_two', "hr_first_entry_date",
-             "hr_latest_entry_date", "reason_last_entry", "hi_entry_date", "hi_reason", "legal_form_first_date", "legal_form_first_type",
-             "hir_legal_form", "hir_commercial_register", "hiu_old_fimierung", "email", "Tel"]
+             "hr_latest_entry_date", "reason_last_entry", "hi_entry_date",
+             "hi_reason", "legal_form_first_date", "legal_form_first_type",
+             "hir_legal_form", "hir_commercial_register", "hiu_old_fimierung",
+             "email", "Tel"]
 
 df = pd.read_csv(DATASET, skiprows=1, names=new_names)
 
@@ -53,6 +57,16 @@ df = pd.read_csv(DATASET, skiprows=1, names=new_names)
 for col in df.columns:
     if df[col].dtype == object:
         df[col] = df[col].str.replace('\n', ' ')
+
+# drop columns with information leakage
+censored_columns = [
+    "hints", "hints_business_model", "product_cat",
+    "CreMA_13A", "CReMA_13B", "CReMA_11A", "CReMA_12", "CReMA_12_add",
+    "CReMA_10", "CReMA_11B", "CReMA_13C", "CReMA_14", "CReMA_15", "CReMA_16",
+    "CEPA_2", "CEPA_3", "CEPA_3_add", "CEPA_1", "CEPA_4", "CEPA_5", "CEPA_7",
+    "CEPA_8", "CEPA_6", "CEPA_9", "sustainabile_agriculture",
+    'sustainable_mobility', 'green_IT', 'green_finance', 'green_services']
+df.drop(censored_columns, inplace=True, axis='columns')
 
 # START h2o
 h2o.init()  # h2o.shutdown()
@@ -66,7 +80,6 @@ train, test = hf.split_frame(ratios=[.8])
 
 # RUN AUTOML
 aml = H2OAutoML(max_runtime_secs=30,
-                project_name='predict_green',
                 exclude_algos=['StackedEnsemble', 'DeepLearning'])
 aml.train(y=TARGET_VARIABLE,
           training_frame=train,
