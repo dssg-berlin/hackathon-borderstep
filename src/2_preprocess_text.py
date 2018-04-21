@@ -4,7 +4,7 @@ import spacy
 
 
 def lemmatize_stopwords(doc):
-    return [token.lemma_ for token in doc if not token.is_stop and not token.is_punct ]
+    return [token.lemma_ for token in doc if token.is_alpha and not token.is_stop ]
 
 def preprocess_text(text):
     if isinstance(text,list) and len(text)>0:

@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import html
 
-BASE_DATA_PATH = 'data/'
+BASE_DATA_PATH = 'data/input/'
 BASE_DATA_PATH_RESULTS = 'data/processed/DSSG/'
 
 
