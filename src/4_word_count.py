@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import re
+from collections import Counter
 
 # Extract keywords
 data_dir = '../data/processed/DSSG'
@@ -41,12 +42,21 @@ for k, ds in dfk.iterrows():
 
 webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
 
-from collections import Counter
-r = re.compile('|'.join('r\b%s\b' % w for w in extract_keywords(ds)), re.I)
-rec = []
-for i, row in webs.iterrows():
-    if isinstance(row['text'], float):
-        continue
 
-    for par in row['text']:
-        rec.append(Counter(re.findall(r, par)))
+def count_keywords(keyword):
+    """Count occuring keywords in text
+    Keyword Arguments:
+    keyword --
+    """
+
+    r = re.compile('|'.join('r\b%s\b' % w for w in keyword), re.I)
+    rec = []
+    for entry, row in webs.iterrows():
+        if isinstance(row['text'], float):
+            continue
+
+        for par in row['text']:
+            counts = Counter(re.findall(r, par))
+            if len(counts) > 0:
+                rec.append(entry)
+    return rec
