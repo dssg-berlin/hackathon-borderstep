@@ -38,9 +38,9 @@ col_names = ["noname", "name_company", "PLZ","town","Bundesland","url",
         "hr_latest_entry_date", "reason_last_entry","hi_entry_date", "hi_reason", "legal_form_first_date", "legal_form_first_type", 
         "hir_legal_form", "hir_commercial_register", "hiu_old_fimierung", "email", "Tel"]
 
-GEMO2015 = pd.read_csv("data/processed/GEMO2015_ 625 gültige Datensätze_171019.csv")
+GEMO2015 = pd.read_csv("data/processed/DSSG/GEMO2015_ 625 gültige Datensätze_171019.csv")
 GEMO2015.columns = col_names
-GEMO2016 = pd.read_csv("data/processed/GEMO2016_ 625gültige_Datensätze_171019.csv")
+GEMO2016 = pd.read_csv("data/processed/DSSG/GEMO2016_ 625gültige_Datensätze_171019.csv")
 GEMO2016.columns = col_names
 
 # 2006 - 2013 haben ein anderes Format
@@ -61,8 +61,8 @@ GEMO2015.drop_duplicates(subset="domain", keep="first", inplace=True)
 GEMO2016.drop_duplicates(subset="domain", keep="first", inplace=True)
 
 
-GEMO2016_html = pd.read_pickle("GEMO_2016.pkl.gz")
-GEMO2015_html = pd.read_pickle("GEMO_2015.pkl.gz")
+GEMO2016_html = pd.read_pickle("data/processed/DSSG/GEMO_2016.pkl.gz")
+GEMO2015_html = pd.read_pickle("data/processed/DSSG/GEMO_2015.pkl.gz")
 
 
 GEMO2015_html["domain"].value_counts()[0:10]
@@ -90,5 +90,4 @@ def joined_data(Gemo2015, Gemo2015_web, Gemo2016, Gemo2016_web):
     return df_full
 
 
-
-
+df.to_pickle('data/processed/merge_2015_2016.pkl')
