@@ -21,4 +21,4 @@ output_file = 'GEMO_2016_prep.pkl.gz'
 nlp = spacy.load('de_core_news_sm')
 df_text = pd.read_pickle(data_dir + input_file)
 df_text['lemma_words'] = df_text.text.apply(preprocess_text)
-df_text.to_pickle(output_file)
+df_text.to_pickle(data_dir + output_file)
