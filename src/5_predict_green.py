@@ -48,15 +48,17 @@ new_names = ["noname", "name_company", "PLZ","town","Bundesland","url",
 
 df = pd.read_csv(DATASET, skiprows=1, names=new_names)
 
-# df.iloc[:,47].to_string().replace(['\n'], '')
-
+# remove '\n' in all 'object' columns
 for col in df.columns:
     if df[col].dtype == object:
-        df[col] = df[col].str.replace('\n', 'n')
+        df[col] = df[col].str.replace('\n', ' ')
 
 # START h2o
 h2o.init()  # h2o.shutdown()
 hf = h2o.H2OFrame(df)
+
+# fix data types of columns
+hf[TARGET_VARIABLE] = hf[TARGET_VARIABLE].asfactor()
 
 # PARTITION DATA
 train, test = hf.split_frame(ratios=[.8])
