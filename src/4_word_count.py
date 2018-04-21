@@ -82,22 +82,10 @@ def count_keywords(keyword, text):
     if len(keyword) == 0:
         return []
 
-    r = re.compile('|'.join(r'\b%s\b' % w for w in keyword), re.I)
-    counts = Counter(re.findall(r, text))
+    target = re.compile('|'.join(r'\b%s\b' % w for w in keyword), re.I)
+    counts = Counter(re.findall(target, text))
     return counts
 
-
-def parse_datas(webs):
-    for entry, row in webs.iterrows():
-        if isinstance(row['text'], float):
-            continue
-
-        description = " ".join(row['text'])
-
-        counts = Counter(re.findall(r, description))
-        if len(counts) > 0:
-            rec.append((entry, counts))
-    return rec
 
 
 # Extract keywords
@@ -112,15 +100,31 @@ dfk = dfk.drop(['field', 'notes'], axis=1)
 dfk = dfk.fillna('')
 
 webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')[:50]
-
+classes = define_classes(dfk)
 
 ds_list = []
-for domain, egss in d.items():
-    for column, keyword in egss.items():
+for entry, row in webs.iterrows():
+    if isinstance(row['text'], float):
+        continue
+
+    description = " ".join(row['text'])
+    for domain, egss in classes.items():
+        for column, keywords in egss.items():
+
+            if keywords.get('avoid_keywords', None):
+                unwanted = count_keywords(keywords.get(
+                    'avoid_keywords', None), description)
+                if unwanted:
+                    continue
+
         entries = count_keywords(keyword)
         ds = pd.Series({k: v for k, v in entries})
         ds.name = column
         ds_list.append(ds)
+
+    counts = Counter(re.findall(r, description))
+    if len(counts) > 0:
+        rec.append((entry, counts))
 
 df = pd.concat(ds_list, axis=1)
 df = df.reindex(np.arange(len(webs)))
