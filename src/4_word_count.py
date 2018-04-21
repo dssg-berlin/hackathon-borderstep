@@ -5,7 +5,7 @@ import re
 from collections import Counter
 
 # Extract keywords
-data_dir = '../data/processed/DSSG'
+data_dir = 'data/processed/DSSG'
 keyword_filename = os.path.join(
     data_dir, 'GEMO-Schlagwortkatalog_20180312.xlsx')
 dfk = pd.read_excel(keyword_filename, skiprows=1)
@@ -21,7 +21,7 @@ def extract_keywords(ds):
     content = re.sub('[\(\)]', ',', content)
     content = content.split(',')
     content = [a.strip() for a in content if a.strip() != '']
-    content = [re.sub('\*', '.*', x) for x in content]
+    content = [re.sub('\*', '\w*', x) for x in content]
     return content
 
 
@@ -40,7 +40,7 @@ for k, ds in dfk.iterrows():
         else:
             d[domain][egss] += extract_keywords(ds)
 
-webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
+webs = pd.read_pickle('data/processed/DSSG/GEMO_2016.pkl.gz')
 
 
 def count_keywords(keyword):
@@ -57,15 +57,28 @@ def count_keywords(keyword):
         if isinstance(row['text'], float):
             continue
 
-        for par in row['text']:
-            counts = Counter(re.findall(r, par))
-            if len(counts) > 0:
-                rec.append(entry)
+        description = " ".join(row['text'])
+        counts = Counter(re.findall(r, description))
+        if len(counts) > 0:
+            rec.append((entry, counts))
     return rec
 
 
+ds_list = []
 for domain, egss in d.items():
-    for label, keyword in egss.items():
+    for column, keyword in egss.items():
         entries = count_keywords(keyword)
-        if len(entries) > 0:
-            print(domain, label, entries)
+        ds = pd.Series({k: v for k, v in entries})
+        ds.name = column
+        ds_list.append(ds)
+
+df = pd.concat(ds_list, axis=1)
+df = df.reindex(np.arange(len(webs)))
+df = df.fillna('')
+df_count = df.applymap(len)
+df_words = df.applymap(lambda d: list(d.keys()) if isinstance(d, dict) else 0)
+
+dir_out = 'data/processed'
+pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2016_map.pkl'))
+pd.to_pickle(df_count, os.path.join(dir_out, 'word_counts_2016_counts.pkl'))
+pd.to_pickle(df_words, os.path.join(dir_out, 'word_counts_2016_words.pkl'))
