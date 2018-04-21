@@ -121,12 +121,9 @@ GEMO2016_html = pd.read_pickle("data/processed/DSSG/GEMO_2016.pkl.gz")
 GEMO2015_html = pd.read_pickle("data/processed/DSSG/GEMO_2015.pkl.gz")
 GEMO2006_2013_html = pd.read_pickle("data/processed/DSSG/GEMO-GrüneUN2006-2013.pkl.gz")
 
-df = merge_data(Gemo2015, Gemo2015_web).append(merge_data(Gemo2016, Gemo2016_web))
-df.to_pickle('data/processed/merge_2015_2016.pkl')
+df = merge_data(GEMO2015, GEMO2015_html).append(merge_data(GEMO2016, GEMO2016_html))
 
 df2 = merge_data(GEMO2006_13, GEMO2006_2013_html)
-df2.to_pickle('data/processed/merge_2006_2013.pkl')
-
 
 col_names_both = np.intersect1d(list(df.columns), list(df2.columns))
 
