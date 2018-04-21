@@ -56,14 +56,14 @@ for col in df.columns:
 
 # START h2o
 h2o.init()  # h2o.shutdown()
-hf = h2o.H2OFrame(df.iloc[1:3])
+hf = h2o.H2OFrame(df)
 
 # PARTITION DATA
 train, test = hf.split_frame(ratios=[.8])
 
 # RUN AUTOML
 aml = H2OAutoML(max_runtime_secs=30)
-aml.train(y='TARGET_VARIABLE',
+aml.train(y=TARGET_VARIABLE,
           training_frame=train,
           validation_frame=test)
 
