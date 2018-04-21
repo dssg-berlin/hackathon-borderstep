@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 import html
-
-BASE_DATA_PATH = 'data/input/'
+#/Users/jpapaioannou/Documents/Repos/private/dssg2018/hackathon-borderstep/
+BASE_DATA_PATH = 'data/processed/'
+                 #'word_count_2015_2016.pkl'
 BASE_DATA_PATH_RESULTS = 'data/processed/DSSG/'
 
 def get_data(file_path):
@@ -13,8 +14,8 @@ def get_data(file_path):
     elif 'pkl' in file_path:
         data = pd.read_pickle(BASE_DATA_PATH + file_path)
 
-    return data
 
+    return data
 
 def extract_title_from_html(ex):
     from bs4 import BeautifulSoup
@@ -58,5 +59,7 @@ def read_files_from_data_folder(filenames):
 
 if __name__ == '__main__':
 
-    filenames = ['GEMO-GrüneUN2006-2013.pkl.gz', 'GEMO_2015.pkl.gz', 'GEMO_2016.pkl.gz']
+    #filenames = ['GEMO-GrüneUN2006-2013.pkl.gz', 'GEMO_2015.pkl.gz', 'GEMO_2016.pkl.gz']
+
+    filenames = ['word_count_2015_2016.pkl']
     read_files_from_data_folder(filenames)
