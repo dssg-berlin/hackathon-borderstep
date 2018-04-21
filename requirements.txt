@@ -2,3 +2,4 @@ h2o==3.18.0.3
 pandas==0.22
 sklearn
 spacy==2.0.11
+pytest

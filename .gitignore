@@ -2,3 +2,7 @@
 data/*
 !data/input/README.md
 !data/processed/README.md
+
+# files
+*~
+*.pyc
