@@ -1,46 +1,62 @@
-import pandas as pd
-import numpy as np
 import os
 import re
 from collections import Counter
+import pandas as pd
+import numpy as np
 
-# Extract keywords
-data_dir = '../data/processed/DSSG'
-keyword_filename = os.path.join(
-    data_dir, 'GEMO-Schlagwortkatalog_20180312.xlsx')
-dfk = pd.read_excel(keyword_filename, skiprows=1)
 
-dfk.columns = ['domain', 'egss', 'field', 'keywords', 'extra', 'notes']
-dfk = dfk.drop(['field', 'notes'], axis=1)
+def keyword_filter(entry):
+    """From entries in the excel cell describe keywords
+    Keyword Arguments:
+    entry --
+    """
+    negatives_p = entry.split('NICHT')
 
-dfk = dfk.fillna('')
+    keywords = {"desired_keywords": split_cons(negatives_p[0])}
+    if len(negatives_p) == 2:
+        n_content = split_cons(negatives_p[1])
+        keywords["avoid_keywords"] = n_content
+
+    return keywords
+
+
+def split_cons(content):
+    """
+    Keyword Arguments:
+    content --
+    """
+    content = content.split(',')
+    content = [a.strip() for a in content if a.strip() != '']
+    return [re.sub('\*', '\w*', x) for x in content]
 
 
 def extract_keywords(ds):
     content = ds.keywords + ', ' + ds.extra
     content = re.sub('[\(\)]', ',', content)
-    content = content.split(',')
-    content = [a.strip() for a in content if a.strip() != '']
-    content = [re.sub('\*', '\w*', x) for x in content]
-    return content
+    return keyword_filter(content)
 
 
-d = {}
-for k, ds in dfk.iterrows():
+def define_classes(dfk):
+    """From the dataframed excel file of categories return a dictionary
+    Keyword Arguments:
+    dfk --
+    """
 
-    if ds.domain is not '':
-        domain = ds.domain
-        egss = ds.egss if ds.egss != '' else domain
-        d[domain] = {}
-        d[domain][egss] = extract_keywords(ds)
-    else:
-        if ds.egss is not '':
-            egss = ds.egss
+    d = {}
+    for k, ds in dfk.iterrows():
+
+        if ds.domain is not '':
+            domain = ds.domain
+            egss = ds.egss if ds.egss != '' else domain
+            d[domain] = {}
             d[domain][egss] = extract_keywords(ds)
         else:
-            d[domain][egss] += extract_keywords(ds)
-
-webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')
+            if ds.egss is not '':
+                egss = ds.egss
+                d[domain][egss] = extract_keywords(ds)
+            else:
+                d[domain][egss] += extract_keywords(ds)
+    return d
 
 
 def count_keywords(keyword):
@@ -62,6 +78,20 @@ def count_keywords(keyword):
         if len(counts) > 0:
             rec.append((entry, counts))
     return rec
+
+
+# Extract keywords
+data_dir = '../data/processed/DSSG'
+keyword_filename = os.path.join(
+    data_dir, 'GEMO-Schlagwortkatalog_20180312.xlsx')
+dfk = pd.read_excel(keyword_filename, skiprows=1)
+
+dfk.columns = ['domain', 'egss', 'field', 'keywords', 'extra', 'notes']
+dfk = dfk.drop(['field', 'notes'], axis=1)
+
+dfk = dfk.fillna('')
+
+webs = pd.read_pickle('../data/processed/DSSG/GEMO_2016.pkl.gz')[:50]
 
 
 ds_list = []
