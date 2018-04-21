@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import re
 
 # Extract keywords
 data_dir = '../data/processed/DSSG'
@@ -15,8 +16,10 @@ dfk = dfk.fillna('')
 
 def extract_keywords(ds):
     content = ds.keywords + ', ' + ds.extra
+    content = re.sub('[\(\)]', ',', content)
     content = content.split(',')
     content = [a.strip() for a in content if a.strip() != '']
+    content = [re.sub('\*', '.*', x) for x in content]
     return content
 
 
@@ -34,7 +37,3 @@ for k, ds in dfk.iterrows():
             d[domain][egss] = extract_keywords(ds)
         else:
             d[domain][egss] += extract_keywords(ds)
-
-
-for k, v in d.items():
-    print('{}: {}'.format(k, len(v)))
