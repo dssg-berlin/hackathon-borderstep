@@ -86,7 +86,7 @@ def naive_lang_evaluate(text: list, package='de_core_news_sm') -> float:
     return matched / len(tokens)
 
 
-data_dir = '../data/processed/'
+data_dir = 'data/processed/'
 input_file = 'word_count_full.pkl'
 output_file = 'lemma_full.pkl'
 

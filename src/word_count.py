@@ -125,7 +125,7 @@ if __name__ == '__main__':
     dfk = dfk.fillna('')
     classes = define_classes(dfk)
 
-    webs = pd.read_pickle('data/processed/merge_2015_2016.pkl')
+    webs = pd.read_pickle('data/processed/merge_full.pkl')
     webs = webs.reset_index(drop=True)
 
     ds_list = []
@@ -151,7 +151,7 @@ if __name__ == '__main__':
     df_out = pd.concat([webs, df, df_value_sum], axis=1)
 
     dir_out = 'data/processed'
-    pd.to_pickle(df_out, os.path.join(dir_out, 'word_count_2015_2016.pkl'))
+    pd.to_pickle(df_out, os.path.join(dir_out, 'word_count_full.pkl'))
 
     # pd.to_pickle(df, os.path.join(dir_out, 'word_counts_2015_2016_dicts.pkl'))
     # pd.to_pickle(df_value_sum, os.path.join(
