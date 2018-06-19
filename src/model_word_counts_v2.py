@@ -168,13 +168,15 @@ model = linear_model.LogisticRegression()
 model.fit(df_X_train, df_y_train)
 y_pred_test = model.predict(df_X_test)
 
-threshold = 0.5
+threshold = 0.7
 print('evaluate on training set')
 print(metrics.confusion_matrix(df_y_train, model.predict_proba(df_X_train)[:, 1] > threshold))
 print(metrics.classification_report(df_y_train, model.predict_proba(df_X_train)[:, 1] > threshold))
 print('evaluate on test set')
-print(metrics.confusion_matrix(df_y_test, y_pred_test))
-print(metrics.classification_report(df_y_test, y_pred_test))
+print(metrics.confusion_matrix(df_y_test, model.predict_proba(df_X_test)[:, 1] > threshold))
+print(metrics.classification_report(df_y_test, model.predict_proba(df_X_test)[:, 1] > threshold))
+# print(metrics.confusion_matrix(df_y_test, y_pred_test))
+# print(metrics.classification_report(df_y_test, y_pred_test))
 
 # Plot histogram of predicted probabilities, to be able to set threshold
 if False:
